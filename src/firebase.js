@@ -28,8 +28,6 @@ export const githubProvider = new firebase.auth.GithubAuthProvider()
 
 export const socialMediaAuth = async (provider) => {
   const auth = firebase.auth()
-  // return firebase
-  // .auth()
   const data = auth.signInWithPopup(provider)
   return data
     .then((res) => {
