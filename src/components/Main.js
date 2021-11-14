@@ -12,9 +12,9 @@ const Main = () => {
           marginBottom: '10px',
         }}
       >
-        <Chat />
-        <Chat />
-        <Chat />
+        <Chat key="1" />
+        <Chat key="2" />
+        <Chat key="3" />
       </div>
 
       <footer>フッター</footer>

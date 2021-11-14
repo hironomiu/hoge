@@ -1,4 +1,5 @@
 import { githubProvider, socialMediaAuth } from '../firebase'
+
 const Login = ({ setIsLogin }) => {
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider)

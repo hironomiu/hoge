@@ -6,11 +6,14 @@ import {
   pushMessage,
 } from '../firebase'
 
-const Chat = () => {
+const Chat = (props) => {
   const [name, setName] = useState('default')
   const [text, setText] = useState('text')
+  const [updateName, setUpdateName] = useState('')
+  const [updateText, setUpdateText] = useState('')
   const [messages, setMessages] = useState([])
   const [update, setUpdate] = useState('')
+  const [updateFlag, setUpdateFlag] = useState(false)
   const refa = useRef(null)
   useEffect(() => {
     if (process.browser) {
@@ -46,18 +49,41 @@ const Chat = () => {
       <>
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName((name) => (name = e.target.value))}
+          value={updateName}
+          onChange={(e) =>
+            setUpdateName((updateName) => (updateName = e.target.value))
+          }
         />
         <input
           type="text"
-          value={text}
-          onChange={(e) => setText((text) => (text = e.target.value))}
+          value={updateText}
+          onChange={(e) =>
+            setUpdateText((updateText) => (updateText = e.target.value))
+          }
         />
         <button
           onClick={() => {
-            updateMessage(key, { name: name, text: text })
-            setUpdate('')
+            const tempMessages = [...messages]
+            const index = tempMessages.findIndex(
+              (message) => message.key === key
+            )
+            tempMessages[index] = {
+              key: key,
+              name: updateName,
+              text: updateText,
+            }
+            setMessages([...tempMessages])
+
+            updateMessage(key, { name: updateName, text: updateText })
+
+            setTimeout(() => {
+              setUpdateName('')
+              setUpdateText('')
+              setUpdate('')
+              setUpdateFlag(false)
+            }, 0)
+
+            // getMessages()
           }}
         >
           update
@@ -66,7 +92,7 @@ const Chat = () => {
     )
   }
   return (
-    <>
+    <div key={props.key}>
       <div style={{ marginLeft: '3px' }}>
         <div
           style={{
@@ -89,11 +115,14 @@ const Chat = () => {
                 <span
                   key={message.key}
                   onClick={() => {
+                    setUpdateName(message.name)
+                    setUpdateText(message.text)
                     setUpdate(message.key)
+                    setUpdateFlag(true)
                   }}
                   style={{ paddingRight: '5px', display: 'inline-block' }}
                 >
-                  {update === message.key
+                  {updateFlag && update === message.key
                     ? updateFunc(message.key)
                     : message.name + ':' + message.text}
                 </span>
@@ -123,7 +152,7 @@ const Chat = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
