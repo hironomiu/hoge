@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import React, { memo, useRef, useState, useEffect } from 'react'
 import {
   updateMessage,
   deleteMessage,
@@ -92,7 +92,7 @@ const Chat = (props) => {
     )
   }
   return (
-    <div key={props.key}>
+    <>
       <div style={{ marginLeft: '3px' }}>
         <div
           style={{
@@ -152,7 +152,7 @@ const Chat = (props) => {
           </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
