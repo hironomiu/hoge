@@ -26,7 +26,7 @@ export const useChat = () => {
       })
   }, [])
 
-  const updateLine = (key) => {
+  const updateLine = useCallback((key) => {
     const tempMessages = [...messages]
     const index = tempMessages.findIndex((message) => message.key === key)
     tempMessages[index] = {
@@ -44,7 +44,7 @@ export const useChat = () => {
       setUpdate('')
       setUpdateFlag(false)
     }, 0)
-  }
+  })
 
   return {
     name,
