@@ -61,6 +61,7 @@ const NoMemoChat = (props) => {
     <>
       <div style={{ marginLeft: '3px' }}>
         <div
+          key={props.value}
           style={{
             border: '1px solid #999',
             width: '350px',
@@ -77,9 +78,8 @@ const NoMemoChat = (props) => {
             ref={ref}
           >
             {messages.map((message) => (
-              <div>
+              <div key={message.key}>
                 <span
-                  key={message.key}
                   onClick={() => {
                     setUpdateName(message.name)
                     setUpdateText(message.text)

@@ -24,7 +24,7 @@ export const useChat = () => {
         })
         setMessages(newMessages)
       })
-  }, [])
+  }, [setMessages])
 
   const updateLine = (key) => {
     const tempMessages = [...messages]
