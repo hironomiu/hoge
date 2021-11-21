@@ -1,48 +1,40 @@
-import React, { memo, useRef, useState, useEffect } from 'react'
-import {
-  updateMessage,
-  deleteMessage,
-  messagesRef,
-  pushMessage,
-} from '../firebase'
+import React, { useEffect, useRef } from 'react'
+import { useChat } from '../hooks/useChat'
+import { deleteMessage, pushMessage } from '../firebase'
 
-const Chat = (props) => {
-  const [name, setName] = useState('default')
-  const [text, setText] = useState('text')
-  const [updateName, setUpdateName] = useState('')
-  const [updateText, setUpdateText] = useState('')
-  const [messages, setMessages] = useState([])
-  const [update, setUpdate] = useState('')
-  const [updateFlag, setUpdateFlag] = useState(false)
-  const refa = useRef(null)
+const NoMemoChat = (props) => {
+  const {
+    name,
+    setName,
+    text,
+    setText,
+    updateName,
+    setUpdateName,
+    updateText,
+    setUpdateText,
+    messages,
+    update,
+    setUpdate,
+    updateFlag,
+    setUpdateFlag,
+    getMessages,
+    updateLine,
+  } = useChat()
+
+  const ref = useRef(null)
+
   useEffect(() => {
     if (process.browser) {
-      if (refa.current != null) {
-        const scroll = refa.current.scrollHeight
-        refa.current.scrollTop = scroll
+      if (ref.current != null) {
+        const scroll = ref.current.scrollHeight
+        ref.current.scrollTop = scroll
       }
     }
   }, [messages])
 
-  const getMessages = () => {
-    messagesRef
-      .orderByKey()
-      .limitToLast(100)
-      .on('value', (snapshot) => {
-        const messages = snapshot.val()
-        if (messages === null) return
-        const entries = Object.entries(messages)
-        const newMessages = entries.map((data) => {
-          const [key, message] = data
-          return { key, ...message }
-        })
-        setMessages(newMessages)
-      })
-  }
-
   useEffect(() => {
     getMessages()
-  }, [])
+  }, [getMessages])
 
   const updateFunc = (key) => {
     return (
@@ -61,33 +53,7 @@ const Chat = (props) => {
             setUpdateText((updateText) => (updateText = e.target.value))
           }
         />
-        <button
-          onClick={() => {
-            const tempMessages = [...messages]
-            const index = tempMessages.findIndex(
-              (message) => message.key === key
-            )
-            tempMessages[index] = {
-              key: key,
-              name: updateName,
-              text: updateText,
-            }
-            setMessages([...tempMessages])
-
-            updateMessage(key, { name: updateName, text: updateText })
-
-            setTimeout(() => {
-              setUpdateName('')
-              setUpdateText('')
-              setUpdate('')
-              setUpdateFlag(false)
-            }, 0)
-
-            // getMessages()
-          }}
-        >
-          update
-        </button>
+        <button onClick={() => updateLine(key)}>update</button>
       </>
     )
   }
@@ -108,7 +74,7 @@ const Chat = (props) => {
               overflow: 'auto',
               height: '80vh',
             }}
-            ref={refa}
+            ref={ref}
           >
             {messages.map((message) => (
               <div>
@@ -156,4 +122,4 @@ const Chat = (props) => {
   )
 }
 
-export default Chat
+export const Chat = React.memo(NoMemoChat)

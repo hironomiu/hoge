@@ -1,6 +1,7 @@
 import { githubProvider, socialMediaAuth } from '../firebase'
+import { memo } from 'react'
 
-const Login = ({ setIsLogin }) => {
+const NoMemoLogin = ({ setIsLogin }) => {
   const handleOnClick = async (provider) => {
     const res = await socialMediaAuth(provider)
     console.log(res)
@@ -17,4 +18,4 @@ const Login = ({ setIsLogin }) => {
   )
 }
 
-export default Login
+export const Login = memo(NoMemoLogin)
